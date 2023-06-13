@@ -1,0 +1,58 @@
+services:
+  api_gateway:
+    build:
+      context: .
+      dockerfile: ./apps/api_gateway/Dockerfile
+      target: development
+    command: npm run start:dev api_gateway
+    env_file:
+      - ./apps/api_gateway/.env
+    depends_on:
+      - mongo
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '4000:4000'
+
+  system:
+    build:
+      context: .
+      dockerfile: ./apps/system/Dockerfile
+      target: development
+    command: npm run start:dev system
+    env_file:
+      - ./apps/system/.env
+    depends_on:
+      - mongo
+      - api_gateway
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  navigation:
+    build:
+      context: .
+      dockerfile: ./apps/navigation/Dockerfile
+      target: development
+    command: npm run start:dev navigation
+    env_file:
+      - ./apps/navigation/.env
+    depends_on:
+      - mongo
+      - api_gateway
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+
+  mongo:
+    image: mongo:5.0
+    ports:
+      - '27017:27017'

@@ -1,0 +1,2 @@
+export const SYSTEM_SERVICE = 'SYSTEM';
+export const NAVIGATION_SERVICE = 'NAVIGATION';
